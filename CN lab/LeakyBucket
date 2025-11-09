@@ -1,0 +1,42 @@
+import java.util.*;
+
+public class LeakyBucket {
+    
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Bucket Capacity: ");
+        int bucketCapacity = sc.nextInt();
+
+        System.out.print("Enter Output Rate (packets per second): ");
+        int outputRate = sc.nextInt();
+
+        System.out.print("Enter number of incoming packets: ");
+        int n = sc.nextInt();
+
+        int currentBucketSize = 0;
+
+        for (int i = 1; i <= n; i++) {
+            System.out.print("Packet " + i + " size: ");
+            int packet = sc.nextInt();
+
+            System.out.println("Incoming packet size = " + packet);
+
+            if (packet + currentBucketSize > bucketCapacity) {
+                System.out.println("❌ Packet dropped! (Bucket Overflow)");
+            } else {
+                currentBucketSize += packet;
+                System.out.println("✔ Packet accepted. Current bucket size = " + currentBucketSize);
+            }
+
+            // Leak / ship packets at the constant output rate
+            int leaked = Math.min(outputRate, currentBucketSize);
+            currentBucketSize -= leaked;
+            System.out.println("Leaked/Sent = " + leaked + " | Remaining in bucket = " + currentBucketSize);
+            System.out.println("--------------------------------------");
+        }
+
+        sc.close();
+    }
+}
